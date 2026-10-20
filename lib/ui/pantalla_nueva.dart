@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/gestor_incidencias.dart';
+import '../model/incidencia.dart';
 
 class PantallaNueva extends StatefulWidget {
   final GestorIncidencias gestor;
@@ -15,6 +16,7 @@ class _PantallaNuevaState extends State<PantallaNueva> {
   final descripcion = TextEditingController();
   final cliente = TextEditingController();
   String categoria = 'Software';
+  String prioridad = 'Media';
   bool ocupado = false;
 
   @override
@@ -30,7 +32,7 @@ class _PantallaNuevaState extends State<PantallaNueva> {
     setState(() => ocupado = true);
     try {
       await widget.gestor.crear(
-        titulo.text.trim(), descripcion.text.trim(), cliente.text.trim(), categoria,
+        titulo.text.trim(), descripcion.text.trim(), cliente.text.trim(), categoria, prioridad,
       );
       if (mounted) Navigator.pop(context, true);
     } catch (e) {
@@ -79,6 +81,14 @@ class _PantallaNuevaState extends State<PantallaNueva> {
                   onChanged: ocupado ? null : (v) => setState(() => categoria = v ?? 'Software'),
                 ),
                 const SizedBox(height: 24),
+                DropdownButtonFormField<String>(
+                  value: prioridad,
+                  decoration: const InputDecoration(labelText: 'Prioridad', border: OutlineInputBorder()),
+                  items: Incidencia.prioridades
+                      .map((p) => DropdownMenuItem(value: p, child: Text(p))).toList(),
+                  onChanged: ocupado ? null : (v) => setState(() => prioridad = v ?? 'Media'),
+                ),
+                const SizedBox(height: 24), 
                 FilledButton.icon(
                   onPressed: ocupado ? null : guardar,
                   icon: const Icon(Icons.save_outlined),
