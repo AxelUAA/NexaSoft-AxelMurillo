@@ -39,6 +39,16 @@ class GestorIncidencias {
     await datos.guardar(incidencias);
   }
 
+  Future<void> cambiarPrioridad(String id, String prioridad) async {
+    for (var i = 0; i < incidencias.length; i++) {
+      if (incidencias[i].id == id) {
+        incidencias[i].prioridad = prioridad;
+        break;
+      }
+    }
+    await datos.guardar(incidencias);
+  }
+
   Future<void> crear(String titulo, String descripcion, String cliente,
       String categoria) async {
     final nuevo = Incidencia(
